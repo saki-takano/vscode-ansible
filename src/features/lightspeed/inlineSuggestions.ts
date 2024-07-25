@@ -409,6 +409,7 @@ const onDoSingleTasksSuggestion: CallbackEntry = async function (
   );
   const documentInfo = loadFile(inlinePosition);
   const suggestionMatchInfo = getSuggestionMatchType(inlinePosition);
+  documentInfo["documentContent"] = documentInfo["documentContent"].split('# ')[1]
 
   const result = await requestSuggestion(documentInfo, inlinePosition);
   if (!result || !result.predictions || result.predictions.length === 0) {
@@ -640,29 +641,35 @@ type InlineSuggestionState =
 async function getInlineSuggestionState(
   inlinePosition: InlinePosition,
 ): Promise<CallbackEntry> {
-  const suggestionMatchInfo = getSuggestionMatchType(inlinePosition);
+  // const suggestionMatchInfo = getSuggestionMatchType(inlinePosition);
+  const suggestionMatchInfo = {
+    spacesBeforePromptStart: 0,
+    suggestionMatchType:"SINGLE-TASK"
+  };
   const rhUserHasSeat =
     await lightSpeedManager.lightspeedAuthenticatedUser.rhUserHasSeat();
 
-  if (
-    !suggestionMatchInfo.suggestionMatchType ||
-    !suggestionMatchInfo.currentLineText.isEmptyOrWhitespace ||
-    suggestionMatchInfo.spacesBeforePromptStart !==
-      suggestionMatchInfo.spacesBeforeCursor
-  ) {
-    // If the user has triggered the inline suggestion by pressing the configured keys,
-    // we will show an information message to the user to help them understand the
-    // correct cursor position to trigger the inline suggestion.
-    if (
-      inlinePosition.context.triggerKind ===
-      vscode.InlineCompletionTriggerKind.Invoke
-    ) {
-      return rhUserHasSeat
-        ? InlineSuggestionState.UnexpectedPromptWithSeat
-        : InlineSuggestionState.UnexpectedPromptWithNoSeat;
-    }
-    return InlineSuggestionState.CancellationRequested;
-  }
+  // if (
+  //   !suggestionMatchInfo.suggestionMatchType ||
+  //   !suggestionMatchInfo.currentLineText.isEmptyOrWhitespace ||
+  //   suggestionMatchInfo.spacesBeforePromptStart !==
+  //     suggestionMatchInfo.spacesBeforeCursor
+  // ) {
+  //   // If the user has triggered the inline suggestion by pressing the configured keys,
+  //   // we will show an information message to the user to help them understand the
+  //   // correct cursor position to trigger the inline suggestion.
+  //   if (
+  //     inlinePosition.context.triggerKind ===
+  //     vscode.InlineCompletionTriggerKind.Invoke
+  //   ) {
+  //     console.log("return UnexpectedPromptWithSeat")
+  //     return rhUserHasSeat
+  //       ? InlineSuggestionState.UnexpectedPromptWithSeat
+  //       : InlineSuggestionState.UnexpectedPromptWithNoSeat;
+  //   }
+  //   console.log("return CancellationRequested")
+  //   return InlineSuggestionState.CancellationRequested;
+  // }
 
   const documentInfo = loadFile(inlinePosition);
   const hasValidPrompt: boolean =
@@ -676,9 +683,9 @@ async function getInlineSuggestionState(
       documentInfo.ansibleFileType,
     );
 
-  if (!hasValidPrompt) {
-    return InlineSuggestionState.ShouldNotTriggerSuggestion;
-  }
+  // if (!hasValidPrompt) {
+  //   return InlineSuggestionState.ShouldNotTriggerSuggestion;
+  // }
 
   switch (
     `${suggestionMatchInfo.suggestionMatchType}-${

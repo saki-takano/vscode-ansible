@@ -25,33 +25,33 @@ export function shouldRequestInlineSuggestions(
   parsedAnsibleDocument: yaml.YAMLMap[],
   ansibleFileType: IAnsibleFileType,
 ): boolean {
-  const lastObject = parsedAnsibleDocument[parsedAnsibleDocument.length - 1];
-  if (typeof lastObject !== "object") {
-    return false;
-  }
+  // const lastObject = parsedAnsibleDocument[parsedAnsibleDocument.length - 1];
+  // if (typeof lastObject !== "object") {
+  //   return false;
+  // }
 
-  const objectKeys = Object.keys(lastObject);
-  const lastParentKey = objectKeys[objectKeys.length - 1];
+  // const objectKeys = Object.keys(lastObject);
+  // const lastParentKey = objectKeys[objectKeys.length - 1];
 
-  // check if single-task trigger is in play context or not
-  if (lastParentKey === "name" && objectKeys.includes("hosts")) {
-    return false;
-  }
+  // // check if single-task trigger is in play context or not
+  // if (lastParentKey === "name" && objectKeys.includes("hosts")) {
+  //   return false;
+  // }
 
-  // check if single-task trigger is in vars context or not
-  if (lastParentKey === "vars" || lastParentKey === "vars_files") {
-    return false;
-  }
+  // // check if single-task trigger is in vars context or not
+  // if (lastParentKey === "vars" || lastParentKey === "vars_files") {
+  //   return false;
+  // }
 
-  // for file identified as playbook, check single task trigger in task context
-  if (
-    ansibleFileType === "playbook" &&
-    !["tasks", "pre_tasks", "post_tasks", "handlers"].some((key) =>
-      objectKeys.includes(key),
-    )
-  ) {
-    return false;
-  }
+  // // for file identified as playbook, check single task trigger in task context
+  // if (
+  //   ansibleFileType === "playbook" &&
+  //   !["tasks", "pre_tasks", "post_tasks", "handlers"].some((key) =>
+  //     objectKeys.includes(key),
+  //   )
+  // ) {
+  //   return false;
+  // }
   return true;
 }
 
