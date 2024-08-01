@@ -319,8 +319,8 @@ export function getWebviewContent(webview: Webview, extensionUri: Uri) {
 
 <body>
     <div class="playbookGeneration">
-        <h2 id="main-header">Create a playbook with Ansible Lightspeed</h2>
-        <div class="pageNumber" id="page-number">1 of 3</div>
+        <h2 id="main-header">Create a Rulebook with Ansible Lightspeed</h2>
+        <div class="pageNumber" id="page-number">1 of 2</div>
         <div class="promptContainer">
           <span>
             "<span id="prompt"></span>"&nbsp;
@@ -328,24 +328,61 @@ export function getWebviewContent(webview: Webview, extensionUri: Uri) {
           </span>
         </div>
         <div class="firstMessage">
-          <h4>What do you want the playbook to accomplish?</h3>
+          <h3>What do you want the Rulebook to accomplish?</h3>
         </div>
         <div class="secondMessage">
-          <h4>Review the suggested steps for your playbook and modify as needed.</h3>
+          <h3>Review the suggested steps for your Rulebook and modify as needed.</h3>
         </div>
         <div class="thirdMessage">
-          <h4>The following playbook was generated for you:</h3>
+          <h3>The following Rulebook was generated for you:</h3>
         </div>
         <div class="mainContainer">
           <div class="editArea">
+            <div class="sourceMessage">
+              <h4>Please describe the source.</h4>
+            </div>
             <vscode-text-area rows=5 resize="vertical"
-                placeholder="I want to write a playbook that will..."
-                id="playbook-text-area">
+                placeholder="receive webhook events"
+                id="source-text-area">
+            </vscode-text-area>
+            <div class="conditionMessage">
+              <h4>Please describe the condition.</h4>
+            </div>
+            <vscode-text-area rows=5 resize="vertical"
+                placeholder="event.body is defined"
+                id="condition-text-area">
+            </vscode-text-area>
+            <div class="actionMessage">
+              <h4>Please describe the action.</h4>
+            </div>
+            <vscode-text-area rows=5 resize="vertical"
+                placeholder="run a job template with some extra_vars"
+                id="action-text-area">
             </vscode-text-area>
             <div class="outlineContainer">
+              <!-- TODO -->
               <ol id="outline-list" contentEditable="true">
-                <li></li>
+               <li></li>
               </ol>
+              <div class="gen-source">
+                <h4>Generated source</h4>
+              </div>
+              <vscode-text-area rows=5 resize="vertical"
+                  id="source-gen-area">
+              </vscode-text-area>
+              <div class="gen-condition">
+                <h4>Generated condition</h4>
+              </div>
+              <vscode-text-area rows=5 resize="vertical"
+                  id="condition-gen-area">
+              </vscode-text-area>
+              <div class="gen-action">
+                <h4>Generated action</h4>
+              </div>
+              <vscode-text-area rows=5 resize="vertical"
+                  id="action-gen-area">
+              </vscode-text-area>
+
             </div>
             <div class="spinnerContainer">
               <span class="codicon-spinner codicon-loading codicon-modifier-spin" id="loading"></span>
@@ -356,7 +393,7 @@ export function getWebviewContent(webview: Webview, extensionUri: Uri) {
           </div>
           <div class="bigIconButtonContainer">
             <vscode-button class="biggerButton" id="submit-button" disabled>
-              Analyze
+              Generate
             </vscode-button>
           </div>
           <div class="resetFeedbackContainer">
@@ -368,26 +405,30 @@ export function getWebviewContent(webview: Webview, extensionUri: Uri) {
           </div>
         </div>
         <div class="examplesContainer">
-            <h4>Examples</h4>
+            <h3>Example</h3>
+            <h4>If you input each box as</h4>
+            <h4>source</h4>
             <div class="exampleTextContainer">
               <p>
-                Create IIS websites on port 8080 and 8081 and open firewall
+                receives events from kafka on host 127.0.0.1
               </p>
             </div>
+            <h4>condition</h4>
             <div class="exampleTextContainer">
               <p>
-                Create a RHEL 9.2 Azure virtual machine named RHEL-VM in resource group named
-                RH attached to the VNET my-vnet and subnet my-subnet with a public ip address and
-                a security group to allow traffic over port 22.
+                event.body is defined 
               </p>
             </div>
+            <h4>action</h4>
             <div class="exampleTextContainer">
               <p>
-                Create a t2.micro EC2 instance using image id ami-01cc36e92a4e9a428 in region
-                east-us-1 in the tenancy B918A05F-80C1-46C7-A85F-CB4B12472970 using
-                subnet-0a908847e7212345 with a public ip and with key name test-servers and
-                with security group ssh-servers and a tag "env:develop", then output the
-                public ip and the private ip address through a debug message.
+                run a job template with some extra_vars
+              </p>
+            </div>
+            <h4>the full prompt will be</h4>
+            <div class="exampleTextContainer">
+              <p>
+                Generate an Ansible Rulebook which receives events from kafka on host 127.0.0.1 and run a job template with some extra_vars when event.body is defined.
               </p>
             </div>
         </div>
@@ -398,7 +439,7 @@ export function getWebviewContent(webview: Webview, extensionUri: Uri) {
         </div>
         <div class="generatePlaybookContainer">
           <vscode-button class="biggerButton" id="generate-button">
-              Generate playbook
+              Generate Rulebook
           </vscode-button>
           <vscode-button class="biggerButton" id="back-button" appearance="secondary">
               Back

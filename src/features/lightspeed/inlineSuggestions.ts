@@ -605,6 +605,7 @@ function loadFile(inlinePosition: InlinePosition): DocumentInfo {
     documentContent,
   );
 
+  // NOTE: yaml parseでエラー出ていそうなところ
   try {
     parsedAnsibleDocument = yaml.parse(documentContent, {
       keepSourceTokens: true,

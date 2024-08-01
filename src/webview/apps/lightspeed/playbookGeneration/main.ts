@@ -18,13 +18,15 @@ provideVSCodeDesignSystem().register(
 );
 
 const TEXTAREA_MAX_HEIGHT = 500;
-const TOTAL_PAGES = 3;
+const TOTAL_PAGES = 2;
 
 let savedText: string;
 let savedPlaybook: string | undefined;
 let generationId: string | undefined;
 let darkMode = true;
-let textArea: TextArea;
+let sourceArea: TextArea;
+let conditionArea: TextArea;
+let actionArea: TextArea;
 let currentPage = 1;
 
 let outline: EditableList;
@@ -40,7 +42,9 @@ window.addEventListener("load", () => {
   setListener("back-to-page2-button", backToPage2);
   setListener("open-editor-button", openEditor);
 
-  textArea = document.getElementById("playbook-text-area") as TextArea;
+  sourceArea = document.getElementById("source-text-area") as TextArea;
+  conditionArea = document.getElementById("condition-text-area") as TextArea;
+  actionArea = document.getElementById("action-text-area") as TextArea;
   setListenerOnTextArea();
   savedText = "";
 
@@ -70,8 +74,11 @@ window.addEventListener("message", async (event) => {
   const message = event.data;
 
   switch (message.command) {
+    // TODO
     case "init": {
-      textArea.focus();
+      sourceArea.focus();
+      conditionArea.focus();
+      actionArea.focus();
       break;
     }
     case "outline": {
@@ -110,7 +117,7 @@ window.addEventListener("message", async (event) => {
         setButtonEnabled("generate-button", true);
         setButtonEnabled("back-button", true);
         setButtonEnabled("reset-button", true);
-      }
+      } 
       break;
     }
   }
@@ -127,8 +134,8 @@ function setListener(id: string, func: any) {
 }
 
 function setListenerOnTextArea() {
-  textArea.addEventListener("input", async () => {
-    const input = textArea.value;
+  sourceArea.addEventListener("input", async () => {
+    const input = sourceArea.value;
     setButtonEnabled("submit-button", input.length > 0);
     adjustTextAreaHeight();
   });
@@ -158,13 +165,17 @@ function hideBlockElement(id: string) {
 
 async function submitInput() {
   // If the saved text is not the current one, clear saved values and assign a new generationId
-  if (savedText !== textArea.value) {
-    savedText = textArea.value;
-    outline.update("");
-    savedPlaybook = undefined;
-    generationId = uuidv4();
-  }
+  // if (savedText !== sourceArea.value) {
+  //   savedText = sourceArea.value;
+  //   outline.update("");
+  //   savedPlaybook = undefined;
+  //   generationId = uuidv4();
+  // }
 
+  savedText = "Generate an Ansible Rulebook which " + sourceArea.value + " and " + actionArea.value + " when " + conditionArea.value + ".";
+  outline.update("");
+  savedPlaybook = undefined;
+  generationId = uuidv4();
   setButtonEnabled("submit-button", false);
 
   vscode.postMessage({
@@ -174,7 +185,9 @@ async function submitInput() {
     outline: outline.getSavedValueAsString(),
     generationId,
   });
-  textArea.focus();
+  sourceArea.focus();
+  conditionArea.focus();
+  actionArea.focus();
 }
 
 function reset() {
@@ -184,7 +197,9 @@ function reset() {
 
 function backToPage1() {
   setupPage(1);
-  textArea.focus();
+  sourceArea.focus();
+  conditionArea.focus();
+  actionArea.focus();
 }
 
 function backToPage2() {
@@ -267,7 +282,9 @@ function setupPage(pageNumber: number) {
   switch (pageNumber) {
     case 1:
       setPageNumber(1);
-      showBlockElement("playbook-text-area");
+      showBlockElement("source-text-area");
+      showBlockElement("condition-text-area");
+      showBlockElement("action-text-area");
       changeDisplay("outlineContainer", "none");
       changeDisplay("formattedPlaybook", "none");
       changeDisplay("bigIconButtonContainer", "block");
@@ -276,6 +293,9 @@ function setupPage(pageNumber: number) {
       changeDisplay("firstMessage", "block");
       changeDisplay("secondMessage", "none");
       changeDisplay("thirdMessage", "none");
+      changeDisplay("sourceMessage", "block");
+      changeDisplay("conditionMessage", "block");
+      changeDisplay("actionMessage", "block");
       changeDisplay("generatePlaybookContainer", "none");
       changeDisplay("promptContainer", "none");
       changeDisplay("openEditorContainer", "none");
@@ -283,7 +303,9 @@ function setupPage(pageNumber: number) {
       break;
     case 2:
       setPageNumber(2);
-      hideBlockElement("playbook-text-area");
+      hideBlockElement("source-text-area");
+      hideBlockElement("condition-text-area");
+      hideBlockElement("action-text-area");
       changeDisplay("outlineContainer", "block");
       changeDisplay("formattedPlaybook", "none");
       changeDisplay("bigIconButtonContainer", "none");
@@ -294,27 +316,15 @@ function setupPage(pageNumber: number) {
       changeDisplay("firstMessage", "none");
       changeDisplay("secondMessage", "block");
       changeDisplay("thirdMessage", "none");
+      changeDisplay("sourceMessage", "none");
+      changeDisplay("conditionMessage", "none");
+      changeDisplay("actionMessage", "none");
       changeDisplay("generatePlaybookContainer", "block");
       changeDisplay("promptContainer", "block");
       changeDisplay("openEditorContainer", "none");
       setButtonEnabled("reset-button", false);
       setButtonEnabled("back-button", true);
       setButtonEnabled("generate-button", true);
-      break;
-    case 3:
-      setPageNumber(3);
-      hideBlockElement("playbook-text-area");
-      changeDisplay("outlineContainer", "none");
-      changeDisplay("formattedPlaybook", "block");
-      changeDisplay("bigIconButtonContainer", "none");
-      changeDisplay("examplesContainer", "none");
-      changeDisplay("resetFeedbackContainer", "none");
-      changeDisplay("firstMessage", "none");
-      changeDisplay("secondMessage", "none");
-      changeDisplay("thirdMessage", "block");
-      changeDisplay("generatePlaybookContainer", "none");
-      changeDisplay("openEditorContainer", "block");
-
       break;
   }
 }
