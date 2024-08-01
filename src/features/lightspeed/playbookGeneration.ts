@@ -152,6 +152,8 @@ export async function showPlaybookGenerationPage(
 
   panel.webview.onDidReceiveMessage(async (message) => {
     const command = message.command;
+    console.log("[DEBUG] playbookGeneration onDidReceiveMessage:");
+    console.log(command);
     switch (command) {
       case "outline": {
         try {
@@ -174,6 +176,8 @@ export async function showPlaybookGenerationPage(
                   );
                 }
               } else {
+                console.log("[DEBUG] response:");
+                console.log(response);
                 panel.webview.postMessage({
                   command: "outline",
                   outline: response,
@@ -358,6 +362,10 @@ export function getWebviewContent(webview: Webview, extensionUri: Uri) {
             <vscode-text-area rows=5 resize="vertical"
                 placeholder="run a job template with some extra_vars"
                 id="action-text-area">
+            </vscode-text-area>
+            <vscode-text-area rows=5 resize="vertical"
+                placeholder="# Generated rulebook will be here"
+                id="rulebook-result-area">
             </vscode-text-area>
             <div class="outlineContainer">
               <!-- TODO -->

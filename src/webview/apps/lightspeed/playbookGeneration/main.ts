@@ -27,6 +27,7 @@ let darkMode = true;
 let sourceArea: TextArea;
 let conditionArea: TextArea;
 let actionArea: TextArea;
+let rulebookResultArea: TextArea;
 let currentPage = 1;
 
 let outline: EditableList;
@@ -45,6 +46,9 @@ window.addEventListener("load", () => {
   sourceArea = document.getElementById("source-text-area") as TextArea;
   conditionArea = document.getElementById("condition-text-area") as TextArea;
   actionArea = document.getElementById("action-text-area") as TextArea;
+  rulebookResultArea = document.getElementById(
+    "rulebook-result-area",
+  ) as TextArea;
   setListenerOnTextArea();
   savedText = "";
 
@@ -72,6 +76,10 @@ window.addEventListener("load", () => {
 
 window.addEventListener("message", async (event) => {
   const message = event.data;
+  console.log("[DEBUG] message event:");
+  console.log(message);
+  console.log("[DEBUG] savedPlaybook: " + savedPlaybook);
+  console.log("[DEBUG] savedPlaybook: " + savedPlaybook);
 
   switch (message.command) {
     // TODO
@@ -85,6 +93,9 @@ window.addEventListener("message", async (event) => {
       setupPage(2);
       outline.update(message.outline.outline);
       savedPlaybook = message.outline.playbook;
+      if (savedPlaybook) {
+        rulebookResultArea.value = savedPlaybook;
+      }
       generationId = message.outline.generationId;
 
       const prompt = document.getElementById("prompt") as HTMLSpanElement;
@@ -117,7 +128,7 @@ window.addEventListener("message", async (event) => {
         setButtonEnabled("generate-button", true);
         setButtonEnabled("back-button", true);
         setButtonEnabled("reset-button", true);
-      } 
+      }
       break;
     }
   }
@@ -172,7 +183,14 @@ async function submitInput() {
   //   generationId = uuidv4();
   // }
 
-  savedText = "Generate an Ansible Rulebook which " + sourceArea.value + " and " + actionArea.value + " when " + conditionArea.value + ".";
+  savedText =
+    "Generate an Ansible Rulebook which " +
+    sourceArea.value +
+    " and " +
+    actionArea.value +
+    " when " +
+    conditionArea.value +
+    ".";
   outline.update("");
   savedPlaybook = undefined;
   generationId = uuidv4();
@@ -271,6 +289,8 @@ function setPageNumber(pageNumber: number) {
     command: "transition",
     toPage: pageNumber,
   });
+  console.log("[DEBUG] setPageNumber()");
+  console.log(pageNumber);
 }
 
 function setButtonEnabled(id: string, enabled: boolean) {
@@ -321,7 +341,7 @@ function setupPage(pageNumber: number) {
       changeDisplay("actionMessage", "none");
       changeDisplay("generatePlaybookContainer", "block");
       changeDisplay("promptContainer", "block");
-      changeDisplay("openEditorContainer", "none");
+      changeDisplay("openEditorContainer", "block");
       setButtonEnabled("reset-button", false);
       setButtonEnabled("back-button", true);
       setButtonEnabled("generate-button", true);

@@ -386,7 +386,7 @@ export class AnsibleLanguageService {
               content: content,
               explanationId: explanationId,
             },
-            { signal: AbortSignal.timeout(28000) },
+            { signal: AbortSignal.timeout(88000) },
           )
           .then((response) => {
             return response.data;
@@ -434,7 +434,7 @@ export class AnsibleLanguageService {
               generationId,
               wizardId,
             },
-            { signal: AbortSignal.timeout(28000) },
+            { signal: AbortSignal.timeout(88000) },
           )
           .then((response) => {
             return response.data;
