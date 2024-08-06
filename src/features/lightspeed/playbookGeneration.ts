@@ -335,7 +335,7 @@ export function getWebviewContent(webview: Webview, extensionUri: Uri) {
           <h3>What do you want the Rulebook to accomplish?</h3>
         </div>
         <div class="secondMessage">
-          <h3>Review the suggested steps for your Rulebook and modify as needed.</h3>
+          <h3>Review the suggested Rulebook and modify as needed.</h3>
         </div>
         <div class="thirdMessage">
           <h3>The following Rulebook was generated for you:</h3>
@@ -346,7 +346,7 @@ export function getWebviewContent(webview: Webview, extensionUri: Uri) {
               <h4>Please describe the source.</h4>
             </div>
             <vscode-text-area rows=5 resize="vertical"
-                placeholder="receive webhook events"
+                placeholder="receives events from kafka on host 127.0.0.1"
                 id="source-text-area">
             </vscode-text-area>
             <div class="conditionMessage">
@@ -363,39 +363,19 @@ export function getWebviewContent(webview: Webview, extensionUri: Uri) {
                 placeholder="run a job template with some extra_vars"
                 id="action-text-area">
             </vscode-text-area>
-            <vscode-text-area rows=5 resize="vertical"
-                placeholder="# Generated rulebook will be here"
-                id="rulebook-result-area">
-            </vscode-text-area>
             <div class="outlineContainer">
-              <!-- TODO -->
               <ol id="outline-list" contentEditable="true">
                <li></li>
               </ol>
-              <div class="gen-source">
-                <h4>Generated source</h4>
-              </div>
-              <vscode-text-area rows=5 resize="vertical"
-                  id="source-gen-area">
-              </vscode-text-area>
-              <div class="gen-condition">
-                <h4>Generated condition</h4>
-              </div>
-              <vscode-text-area rows=5 resize="vertical"
-                  id="condition-gen-area">
-              </vscode-text-area>
-              <div class="gen-action">
-                <h4>Generated action</h4>
-              </div>
-              <vscode-text-area rows=5 resize="vertical"
-                  id="action-gen-area">
-              </vscode-text-area>
-
             </div>
             <div class="spinnerContainer">
               <span class="codicon-spinner codicon-loading codicon-modifier-spin" id="loading"></span>
             </div>
           </div>
+          <vscode-text-area rows=30 resize="vertical"
+            placeholder="# Generated rulebook will be here"
+            id="rulebook-result-area">
+          </vscode-text-area>
           <div class="formattedPlaybook">
             <span id="formatted-code"></span>
           </div>
@@ -457,9 +437,9 @@ export function getWebviewContent(webview: Webview, extensionUri: Uri) {
           <vscode-button class="biggerButton" id="open-editor-button">
               Open editor
           </vscode-button>
-          <vscode-button class="biggerButton" id="back-to-page2-button" appearance="secondary">
+          <!--<vscode-button class="biggerButton" id="back-button" appearance="secondary">
               Back
-          </vscode-button>
+          </vscode-button>-->
         </div>
     </div>
     </div>
